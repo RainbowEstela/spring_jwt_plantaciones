@@ -1,5 +1,6 @@
 package com.jaroso.apijwt.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class Registro {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_sensor"))
+    @JsonIgnore
     private Sensor sensor;
 
 }

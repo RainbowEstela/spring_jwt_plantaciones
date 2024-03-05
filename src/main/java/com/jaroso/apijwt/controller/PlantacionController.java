@@ -9,6 +9,7 @@ import com.jaroso.apijwt.entity.Plantacion;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 //@CrossOrigin(origins = "http://localhost:9000")
 public class PlantacionController {
 
@@ -24,8 +25,28 @@ public class PlantacionController {
         return ResponseEntity.ok( plantaciones );
     }
 
+    @GetMapping("/plantaciones/{id}")
+    public ResponseEntity<Plantacion> findById(@PathVariable Long id) {
+        //this.service.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return this.plantacionService.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PostMapping("/plantaciones")
     public ResponseEntity<Plantacion> create(@RequestBody Plantacion plantacion) {
+        if(plantacion.getId() != null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        this.plantacionService.save(plantacion);
+        return ResponseEntity.ok(plantacion);
+    }
+
+    @PutMapping("/plantaciones")
+    public ResponseEntity<Plantacion> update(@RequestBody Plantacion plantacion) {
+        if(plantacion.getId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         this.plantacionService.save(plantacion);
         return ResponseEntity.ok(plantacion);
     }

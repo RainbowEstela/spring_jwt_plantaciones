@@ -1,5 +1,6 @@
 package com.jaroso.apijwt.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Sensor {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_plantacion"))
+    @JsonIgnore
     private Plantacion plantacion;
 
     @OneToMany(mappedBy = "sensor",fetch = FetchType.EAGER)
