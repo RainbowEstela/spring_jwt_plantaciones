@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -30,6 +32,7 @@ public class Registro {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_sensor"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Sensor sensor;
 
