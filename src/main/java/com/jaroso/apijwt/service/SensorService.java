@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,7 @@ public class SensorService {
         this.sensorRepository.deleteById(id);
     }
 
+    // PROMEDIO SENSOR INTERVALO
     public TemperaturaHumedadDTO temperaturaHumedad(Sensor sensor, LocalDate fechaIni,LocalDate fechaFin) {
         var registros = this.registroRepository.findBySensorAndFechaBetween(sensor,fechaIni,fechaFin);
         Double tempTotal = 0.0;
@@ -48,5 +50,54 @@ public class SensorService {
 
         return new TemperaturaHumedadDTO((tempTotal/registros.size()) , (humTotal/registros.size()));
 
+    }
+
+    // REGISTROS SENSOR
+    public List<Registro> registros(Long id) {
+        Sensor sensor = this.sensorRepository.findById(id).orElse(null);
+
+        if(sensor == null) {
+            return new ArrayList<>();
+        }
+
+        return sensor.getRegistros();
+    }
+
+
+    // REGISTROS SENSOR EN UNA FECHA
+    public List<Registro> registrosFecha(Long id, LocalDate fecha) {
+        Sensor sensor = this.sensorRepository.findById(id).orElse(null);
+
+        if(sensor == null) {
+            return new ArrayList<>();
+        }
+
+        return this.registroRepository.findBySensorAndFecha(sensor,fecha);
+    }
+
+    // MEDIA HISTORICA TEMPERATURA Y HUMEDAD
+    public TemperaturaHumedadDTO promedioHistorico(Long id) {
+        Sensor sensor = this.sensorRepository.findById(id).orElse(null);
+
+        if(sensor == null) {
+            return null;
+        }
+
+        List<Registro> registros = sensor.getRegistros();
+
+        if (registros.isEmpty()) {
+            return null;
+        }
+
+        Double temperatura = registros.stream()
+                .mapToDouble(Registro::getTemperatura)
+                .average()
+                .orElse(0);
+        Double humedad = registros.stream()
+                .mapToDouble(Registro::getHumedad)
+                .average()
+                .orElse(0);
+
+        return new TemperaturaHumedadDTO(temperatura,humedad);
     }
 }

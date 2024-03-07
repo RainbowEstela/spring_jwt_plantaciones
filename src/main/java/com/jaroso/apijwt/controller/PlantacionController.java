@@ -1,5 +1,6 @@
 package com.jaroso.apijwt.controller;
 
+import com.jaroso.apijwt.dto.TemperaturaHumedadDTO;
 import com.jaroso.apijwt.entity.Registro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.jaroso.apijwt.service.PlantacionService;
 import com.jaroso.apijwt.entity.Plantacion;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -79,5 +81,29 @@ public class PlantacionController {
         }
 
         return ResponseEntity.ok(registros);
+    }
+
+    // REGISTROS DE EN UNA FECHA DE UNA PLANTACION
+    @GetMapping("/plantacion/{id}/fecha/{fecha}")
+    public ResponseEntity<List<Registro>> registrosFecha(@PathVariable Long id, @PathVariable LocalDate fecha) {
+        List<Registro> registros = this.plantacionService.registrosFecha(id,fecha);
+
+        if(registros.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(registros);
+    }
+
+    // TEMPERATURA HUMEDAD PROMEDIO DE UNA PLANTACION
+    @GetMapping("/plantacion/{id}/promedio/fecha/{fecha}")
+    public ResponseEntity<TemperaturaHumedadDTO> promedioFecha(@PathVariable Long id,@PathVariable LocalDate fecha) {
+        TemperaturaHumedadDTO mensaje = this.plantacionService.promedioFecha(id,fecha);
+
+        if (mensaje == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(mensaje);
     }
 }

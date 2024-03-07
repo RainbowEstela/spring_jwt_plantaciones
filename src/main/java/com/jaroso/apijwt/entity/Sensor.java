@@ -39,5 +39,6 @@ public class Sensor {
     private Plantacion plantacion;
 
     @OneToMany(mappedBy = "sensor",fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Registro> registros;
 }

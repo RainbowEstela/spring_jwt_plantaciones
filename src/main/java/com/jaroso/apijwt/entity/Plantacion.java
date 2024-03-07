@@ -1,5 +1,6 @@
 package com.jaroso.apijwt.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,6 +29,7 @@ public class Plantacion {
     private String tipoCultivo;
 
     @OneToMany(mappedBy = "plantacion",fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Sensor> sensores;
 
 }

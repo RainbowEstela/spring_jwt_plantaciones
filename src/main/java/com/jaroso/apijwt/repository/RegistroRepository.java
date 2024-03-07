@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface RegistroRepository extends JpaRepository<Registro,Long> {
     List<Registro> findBySensorAndFechaBetween(Sensor sensor, LocalDate fechaIni, LocalDate fechaFin);
+    List<Registro> findBySensorAndFecha(Sensor sensor, LocalDate fecha);
+
 }

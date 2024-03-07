@@ -2,6 +2,7 @@ package com.jaroso.apijwt.controller;
 
 import com.jaroso.apijwt.dto.TemperaturaHumedadDTO;
 import com.jaroso.apijwt.entity.Plantacion;
+import com.jaroso.apijwt.entity.Registro;
 import com.jaroso.apijwt.entity.Sensor;
 import com.jaroso.apijwt.service.PlantacionService;
 import com.jaroso.apijwt.service.SensorService;
@@ -114,6 +115,42 @@ public class SensorController {
         }
 
         TemperaturaHumedadDTO mensaje = this.sensorService.temperaturaHumedad(sensor,fechaIni,fechaFin);
+
+        return ResponseEntity.ok(mensaje);
+    }
+
+    // registros de un sensor
+    @GetMapping("/sensor/{id}")
+    public ResponseEntity<List<Registro>> registros(@PathVariable Long id) {
+        List<Registro> registros = this.sensorService.registros(id);
+
+        if(registros.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(registros);
+    }
+
+    // registros en una fecha de un sensor
+    @GetMapping("/sensor/{id}/fecha/{fecha}")
+    public ResponseEntity<List<Registro>> registroFecha(@PathVariable Long id, @PathVariable LocalDate fecha) {
+        List<Registro> registros = this.sensorService.registrosFecha(id,fecha);
+
+        if(registros.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(registros);
+    }
+
+    // promedio historico sensor
+    @GetMapping("/sensor/{id}/media")
+    public ResponseEntity<TemperaturaHumedadDTO> promedioHistorico(@PathVariable Long id){
+        TemperaturaHumedadDTO mensaje = this.sensorService.promedioHistorico(id);
+
+        if (mensaje == null) {
+            return ResponseEntity.notFound().build();
+        }
 
         return ResponseEntity.ok(mensaje);
     }
